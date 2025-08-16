@@ -1,85 +1,240 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+  <div id="app">
+    <header class="app-header">
+      <div class="header-container">
+        <div class="logo-section">
+          <h1 class="app-title">MandarinPath</h1>
+          <p class="app-subtitle">智能中文学习</p>
+        </div>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+        <nav class="main-nav">
+          <RouterLink to="/" class="nav-link">
+            <span class="nav-icon">🏠</span>
+            <span class="nav-text">Home</span>
+          </RouterLink>
+          <RouterLink to="/profile" class="nav-link">
+            <span class="nav-icon">👤</span>
+            <span class="nav-text">Profile</span>
+          </RouterLink>
+          <RouterLink to="/loading" class="nav-link">
+            <span class="nav-icon">📚</span>
+            <span class="nav-text">Load Words</span>
+          </RouterLink>
+        </nav>
+      </div>
+    </header>
 
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
+    <main class="app-main">
+      <RouterView />
+    </main>
+  </div>
 </template>
 
 <style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
+#app {
+  min-height: 100vh;
   width: 100%;
-  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 100;
+}
+
+.header-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.app-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  background: linear-gradient(45deg, #fff, #f0f0f0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.app-subtitle {
+  font-size: 0.8rem;
+  margin: 0;
+  opacity: 0.9;
+  font-weight: 300;
+}
+
+.main-nav {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.nav-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.4rem 0.75rem;
+  text-decoration: none;
+  color: white;
+  border-radius: 6px;
+  min-width: 60px;
+}
+
+.nav-link:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-link.router-link-active {
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.nav-icon {
+  font-size: 1rem;
+  margin-bottom: 0.2rem;
+}
+
+.nav-text {
+  font-size: 0.7rem;
+  font-weight: 500;
   text-align: center;
-  margin-top: 2rem;
 }
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
+.app-main {
+  flex: 1;
+  width: 100%;
+  background: #f7fafc;
 }
 
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
+/* Tablet */
+@media (min-width: 768px) {
+  .header-container {
+    padding: 1.25rem 2rem;
+  }
+
+  .app-title {
+    font-size: 1.75rem;
+  }
+
+  .app-subtitle {
+    font-size: 0.85rem;
+  }
+
+  .main-nav {
+    gap: 0.5rem;
+  }
+
+  .nav-link {
+    padding: 0.5rem 1rem;
+    min-width: 70px;
+  }
+
+  .nav-icon {
+    font-size: 1.1rem;
+  }
+
+  .nav-text {
+    font-size: 0.75rem;
+  }
 }
 
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
+/* Desktop */
 @media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
+  .header-container {
+    padding: 1.5rem 3rem;
   }
 
-  .logo {
-    margin: 0 2rem 0 0;
+  .app-title {
+    font-size: 2rem;
   }
 
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
+  .app-subtitle {
+    font-size: 0.9rem;
   }
 
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
+  .main-nav {
+    gap: 0.75rem;
+  }
 
-    padding: 1rem 0;
-    margin-top: 1rem;
+  .nav-link {
+    padding: 0.6rem 1.25rem;
+    min-width: 85px;
+  }
+
+  .nav-icon {
+    font-size: 1.3rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .nav-text {
+    font-size: 0.8rem;
+  }
+}
+
+/* Large Desktop */
+@media (min-width: 1440px) {
+  .header-container {
+    padding: 1.5rem 4rem;
+  }
+
+  .app-title {
+    font-size: 2.2rem;
+  }
+
+  .nav-link {
+    padding: 0.7rem 1.5rem;
+    min-width: 95px;
+  }
+
+  .nav-icon {
+    font-size: 1.4rem;
+  }
+
+  .nav-text {
+    font-size: 0.85rem;
+  }
+}
+
+/* Mobile - stack navigation */
+@media (max-width: 480px) {
+  .header-container {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .logo-section {
+    align-items: center;
+    text-align: center;
+  }
+
+  .main-nav {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .nav-link {
+    flex: 1;
+    max-width: 90px;
   }
 }
 </style>
