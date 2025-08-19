@@ -27,10 +27,6 @@ function handleAuthSuccess() {
   showAuthModal.value = false
   // Could show a success toast here
 }
-
-async function handleLogout() {
-  await userStore.logout()
-}
 </script>
 
 <template>
@@ -48,18 +44,18 @@ async function handleLogout() {
               <span class="nav-icon">🏠</span>
               <span class="nav-text">Home</span>
             </RouterLink>
-            <RouterLink to="/profile" class="nav-link">
-              <span class="nav-icon">👤</span>
-              <span class="nav-text">Profile</span>
-            </RouterLink>
             <RouterLink to="/loading" class="nav-link">
               <span class="nav-icon">📚</span>
               <span class="nav-text">Load Words</span>
             </RouterLink>
-            <button @click="handleLogout" class="nav-link logout-button">
-              <span class="nav-icon">🚪</span>
-              <span class="nav-text">Logout</span>
-            </button>
+            <RouterLink to="/profile" class="nav-link user-profile-link">
+              <span class="nav-icon">👤</span>
+              <span class="nav-text">{{
+                userStore.currentUser?.display_name ||
+                userStore.currentUser?.email?.split('@')[0] ||
+                'Profile'
+              }}</span>
+            </RouterLink>
           </template>
           <template v-else>
             <button @click="openAuthModal('login')" class="nav-link auth-button">
@@ -179,6 +175,19 @@ async function handleLogout() {
   font-size: 0.7rem;
   font-weight: 500;
   text-align: center;
+}
+
+.user-profile-link {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.user-profile-link:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.user-profile-link .nav-text {
+  font-weight: 600;
 }
 
 .app-main {
