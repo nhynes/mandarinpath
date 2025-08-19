@@ -334,12 +334,13 @@ function closeModal() {
 
 .modal-content {
   background: white;
-  border-radius: 12px;
+  border-radius: 1rem;
   max-width: 500px;
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  border: 1px solid #e2e8f0;
 }
 
 .modal-header {
@@ -347,28 +348,31 @@ function closeModal() {
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem 1.5rem 0;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid #f1f5f9;
 }
 
 .modal-header h2 {
   margin: 0;
   font-size: 1.5rem;
-  font-weight: 600;
-  color: #1f2937;
+  font-weight: 700;
+  color: #1e293b;
 }
 
 .close-button {
   background: none;
   border: none;
   font-size: 1.5rem;
-  color: #6b7280;
+  color: #94a3b8;
   cursor: pointer;
   padding: 0.25rem;
   line-height: 1;
+  border-radius: 0.25rem;
+  transition: all 0.2s;
 }
 
 .close-button:hover {
-  color: #374151;
+  color: #1e293b;
+  background: #f1f5f9;
 }
 
 .modal-body {
@@ -383,7 +387,7 @@ function closeModal() {
 
 .form-description {
   text-align: center;
-  color: #6b7280;
+  color: #64748b;
   margin: 0 0 1rem;
 }
 
@@ -395,21 +399,21 @@ function closeModal() {
 
 .form-group label {
   font-weight: 500;
-  color: #374151;
+  color: #334155;
 }
 
 .form-group input {
   padding: 0.75rem;
   border: 1px solid #d1d5db;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   font-size: 1rem;
-  transition: border-color 0.2s;
+  transition: all 0.2s;
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
 }
 
 .form-group input.error {
@@ -433,11 +437,14 @@ function closeModal() {
 .auth-button {
   padding: 0.75rem 1rem;
   border: none;
-  border-radius: 8px;
+  border-radius: 0.75rem;
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .auth-button:disabled {
@@ -446,22 +453,31 @@ function closeModal() {
 }
 
 .auth-button.primary {
-  background: #3b82f6;
+  background: #dc2626;
   color: white;
 }
 
 .auth-button.primary:hover:not(:disabled) {
-  background: #2563eb;
+  background: #b91c1c;
+  transform: translateY(-1px);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .auth-button.secondary {
-  background: #f3f4f6;
+  background: white;
   color: #374151;
   border: 1px solid #d1d5db;
 }
 
 .auth-button.secondary:hover:not(:disabled) {
-  background: #e5e7eb;
+  background: #f9fafb;
+  border-color: #9ca3af;
+  transform: translateY(-1px);
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .divider {
@@ -490,19 +506,20 @@ function closeModal() {
 .link-button {
   background: none;
   border: none;
-  color: #3b82f6;
+  color: #dc2626;
   cursor: pointer;
   text-decoration: underline;
   font-size: inherit;
+  transition: color 0.2s;
 }
 
 .link-button:hover {
-  color: #2563eb;
+  color: #b91c1c;
 }
 
 .switch-mode {
   text-align: center;
-  color: #6b7280;
+  color: #64748b;
   margin: 0;
 }
 

@@ -51,8 +51,11 @@ function handleLogoClick() {
     <header class="app-header">
       <div class="header-container">
         <div class="logo-section" @click="handleLogoClick">
-          <h1 class="app-title">MandarinPath</h1>
-          <p class="app-subtitle">智能中文学习</p>
+          <span class="app-logo">中</span>
+          <div>
+            <h1 class="app-title">MandarinPath</h1>
+            <p class="app-subtitle">智能中文学习</p>
+          </div>
         </div>
 
         <nav class="main-nav">
@@ -107,9 +110,12 @@ function handleLogoClick() {
 }
 
 .app-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background: white;
+  color: #334155;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid #e2e8f0;
   position: relative;
   z-index: 100;
 }
@@ -126,8 +132,8 @@ function handleLogoClick() {
 
 .logo-section {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  gap: 0.5rem;
   cursor: pointer;
   transition: opacity 0.2s;
 }
@@ -136,21 +142,39 @@ function handleLogoClick() {
   opacity: 0.8;
 }
 
+.app-logo {
+  display: inline-flex;
+  height: 2rem;
+  width: 2rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  background-color: #dc2626;
+  color: white;
+  font-weight: bold;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s;
+}
+
+.logo-section:hover .app-logo {
+  transform: scale(1.05);
+}
+
 .app-title {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: 1.125rem;
+  font-weight: 600;
   margin: 0;
-  background: linear-gradient(45deg, #fff, #f0f0f0);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #1e293b;
+  letter-spacing: -0.025em;
 }
 
 .app-subtitle {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   margin: 0;
-  opacity: 0.9;
-  font-weight: 300;
+  color: #64748b;
+  font-weight: 400;
 }
 
 .main-nav {
@@ -162,11 +186,12 @@ function handleLogoClick() {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0.4rem 0.75rem;
+  padding: 0.5rem 0.75rem;
   text-decoration: none;
-  color: white;
-  border-radius: 6px;
+  color: #64748b;
+  border-radius: 0.75rem;
   min-width: 60px;
+  transition: all 0.2s;
 }
 
 .auth-button,
@@ -175,15 +200,25 @@ function handleLogoClick() {
   border: none;
   cursor: pointer;
   font-family: inherit;
+  transition: all 0.2s;
+}
+
+.auth-button:hover {
+  background: #f1f5f9;
+  color: #334155;
 }
 
 .nav-link:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: #f1f5f9;
+  color: #334155;
 }
 
 .nav-link.router-link-active {
-  background: rgba(255, 255, 255, 0.2);
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: #fef2f2;
+  color: #dc2626;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .nav-icon {
@@ -198,12 +233,14 @@ function handleLogoClick() {
 }
 
 .user-profile-link {
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
 }
 
 .user-profile-link:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: #fee2e2;
+  border-color: #fca5a5;
 }
 
 .user-profile-link .nav-text {
@@ -213,7 +250,7 @@ function handleLogoClick() {
 .app-main {
   flex: 1;
   width: 100%;
-  background: #f7fafc;
+  background: #f8fafc;
 }
 
 /* Tablet */

@@ -134,8 +134,8 @@ function goToProfile() {
 <style scoped>
 .welcome-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: linear-gradient(135deg, #fef2f2 0%, #fed7aa 100%);
+  color: #1e293b;
   overflow-y: auto;
 }
 
@@ -155,18 +155,16 @@ function goToProfile() {
 
 .hero-title {
   font-size: 3rem;
-  font-weight: 700;
+  font-weight: 800;
   margin: 0 0 0.5rem;
-  background: linear-gradient(45deg, #fff, #f0f0f0);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: #1e293b;
+  letter-spacing: -0.025em;
 }
 
 .hero-subtitle {
   font-size: 1.5rem;
   margin: 0 0 1rem;
-  opacity: 0.9;
+  color: #64748b;
   font-weight: 300;
 }
 
@@ -175,7 +173,7 @@ function goToProfile() {
   max-width: 600px;
   margin: 0 auto;
   line-height: 1.6;
-  opacity: 0.9;
+  color: #475569;
 }
 
 .features-section {
@@ -189,12 +187,22 @@ function goToProfile() {
 }
 
 .feature-card {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border-radius: 12px;
+  background: white;
+  border-radius: 1rem;
   padding: 1.5rem;
   text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid #e2e8f0;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.2s;
+}
+
+.feature-card:hover {
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transform: translateY(-2px);
 }
 
 .feature-icon {
@@ -206,11 +214,12 @@ function goToProfile() {
   font-size: 1.2rem;
   margin: 0 0 0.5rem;
   font-weight: 600;
+  color: #1e293b;
 }
 
 .feature-card p {
   margin: 0;
-  opacity: 0.9;
+  color: #64748b;
   line-height: 1.5;
 }
 
@@ -221,12 +230,14 @@ function goToProfile() {
 }
 
 .auth-card {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border-radius: 16px;
+  background: white;
+  border-radius: 1.5rem;
   padding: 2rem;
   text-align: center;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid #e2e8f0;
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
   max-width: 400px;
   width: 100%;
 }
@@ -234,12 +245,13 @@ function goToProfile() {
 .auth-card h3 {
   font-size: 1.5rem;
   margin: 0 0 0.5rem;
-  font-weight: 600;
+  font-weight: 700;
+  color: #1e293b;
 }
 
 .auth-card > p {
   margin: 0 0 1.5rem;
-  opacity: 0.9;
+  color: #64748b;
 }
 
 .browser-warning {
@@ -281,22 +293,23 @@ function goToProfile() {
 }
 
 .auth-btn.primary {
-  background: #3b82f6;
+  background: #dc2626;
   color: white;
 }
 
 .auth-btn.primary:hover {
-  background: #2563eb;
+  background: #b91c1c;
 }
 
 .auth-btn.secondary {
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: white;
+  color: #374151;
+  border: 1px solid #d1d5db;
 }
 
 .auth-btn.secondary:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: #f9fafb;
+  border-color: #9ca3af;
 }
 
 .auth-btn-icon {
@@ -309,9 +322,10 @@ function goToProfile() {
 }
 
 .passkey-info details {
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
   padding: 1rem;
+  background: #f8fafc;
 }
 
 .passkey-info summary {
@@ -323,7 +337,7 @@ function goToProfile() {
 .passkey-explanation {
   margin-top: 0.75rem;
   font-size: 0.9rem;
-  opacity: 0.9;
+  color: #64748b;
   line-height: 1.5;
 }
 
