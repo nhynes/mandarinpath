@@ -1,0 +1,71 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend.yml'
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: backend
+
+      - name: Install sqlx-cli
+        run: cargo install sqlx-cli --no-default-features --features sqlite
+
+      - name: Check formatting
+        run: cargo fmt --check
+        working-directory: backend
+
+      - name: Run clippy
+        run: cargo clippy -- -D warnings
+        working-directory: backend
+
+      - name: Type check
+        run: cargo check
+        working-directory: backend
+
+      - name: Setup test database
+        run: |
+          touch mandarinpath.db
+          sqlx migrate run --source migrations
+        working-directory: backend
+        env:
+          DATABASE_URL: sqlite:./mandarinpath.db
+
+      - name: Run tests
+        run: cargo test
+        working-directory: backend
+        env:
+          DATABASE_URL: sqlite:./mandarinpath.db
+
+      - name: Build application
+        run: cargo build --release
+        working-directory: backend
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-build
+          path: backend/target/release/mandarinpath-backend
+          retention-days: 1
