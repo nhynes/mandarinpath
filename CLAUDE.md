@@ -15,25 +15,32 @@ MandarinPath is a Chinese language learning application designed to create a ful
 
 ### Repository Structure
 - **`app/`**: Vue.js frontend application (see `app/CLAUDE.md` for specific details)
-- **Backend**: TBD - will be added soon for AI grading and intelligent word management
+- **`backend/`**: Rust backend server (see `backend/CLAUDE.md` for specific details)
 
 ## Development Requirements
 
-### Code Quality Standards
-**CRITICAL**: After making any changeset, you MUST run:
-1. **Formatting**: `pnpm format` - Format all code with Prettier
+### Code Quality Standards by Directory
+
+#### Frontend (`app/` directory)
+**CRITICAL**: After making any changeset to frontend code, you MUST run from `app/` directory:
+1. **Formatting**: `pnpm format` - Format code with Prettier
 2. **Linting**: `pnpm lint` - Run ESLint + oxlint with auto-fix
 3. **Type checking**: `pnpm type-check` - Verify TypeScript compilation
 4. **Tests**: Run all relevant tests (unit, integration, UI)
+
+#### Backend (`backend/` directory)
+**CRITICAL**: After making any changeset to backend code, you MUST run from `backend/` directory:
+1. **Formatting**: `cargo fmt` - Format Rust code with rustfmt
+2. **Linting**: `cargo clippy` - Run Rust linter with suggestions
+3. **Type checking**: `cargo check` - Verify Rust compilation
+4. **Tests**: `cargo test` - Run all unit and integration tests
 
 ### Testing Requirements
 **MANDATORY**: When adding new features or fixing bugs, you MUST:
 - Add unit tests for utility functions and business logic
 - Add integration tests for component interactions
-- Add UI tests for user workflows
+- Add UI tests for user workflows (frontend)
 - Ensure all tests pass before considering work complete
-
-Note: These requirements apply to all parts of the codebase (frontend, backend when added, etc.)
 
 ## Development Notes
 

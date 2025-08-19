@@ -1,5 +1,6 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
+import { authService, type User } from '@/services/auth'
 
 export interface UserStats {
   streak: number
@@ -74,7 +75,8 @@ export const useUserStore = defineStore('user', () => {
     },
   ])
 
-  const isLoggedIn = computed(() => true) // Placeholder
+  const currentUser = ref<User | null>(authService.getCurrentUser())
+  const isLoggedIn = computed(() => authService.isAuthenticated())
 
   function updateStats(newStats: Partial<UserStats>) {
     Object.assign(stats.value, newStats)
@@ -120,10 +122,85 @@ export const useUserStore = defineStore('user', () => {
     stats.value.tasksCompleted++
   }
 
+  // Authentication functions
+  async function login(email: string, password: string): Promise<boolean> {
+    try {
+      await authService.login(email, password)
+      currentUser.value = authService.getCurrentUser()
+      return true
+    } catch (error) {
+      console.error('Login failed:', error)
+      return false
+    }
+  }
+
+  async function register(email: string, password: string, displayName?: string): Promise<boolean> {
+    try {
+      await authService.register(email, password, displayName)
+      currentUser.value = authService.getCurrentUser()
+      return true
+    } catch (error) {
+      console.error('Registration failed:', error)
+      return false
+    }
+  }
+
+  async function logout(): Promise<void> {
+    try {
+      await authService.logout()
+      currentUser.value = null
+      // Reset user data on logout
+      stats.value = {
+        streak: 0,
+        wordsThisWeek: 0,
+        totalWords: 0,
+        minutesToday: 0,
+        tasksCompleted: 0,
+        totalHours: 0,
+        daysStreak: 0,
+        wordsLearned: 0,
+      }
+      recentActivities.value = []
+    } catch (error) {
+      console.error('Logout failed:', error)
+    }
+  }
+
+  async function logoutAll(): Promise<void> {
+    try {
+      await authService.logoutAll()
+      currentUser.value = null
+      // Reset user data on logout
+      stats.value = {
+        streak: 0,
+        wordsThisWeek: 0,
+        totalWords: 0,
+        minutesToday: 0,
+        tasksCompleted: 0,
+        totalHours: 0,
+        daysStreak: 0,
+        wordsLearned: 0,
+      }
+      recentActivities.value = []
+    } catch (error) {
+      console.error('Logout all failed:', error)
+    }
+  }
+
+  // Validation functions for forms
+  function validateEmail(email: string): boolean {
+    return authService.validateEmail(email)
+  }
+
+  function validatePassword(password: string): { valid: boolean; message?: string } {
+    return authService.validatePassword(password)
+  }
+
   return {
     stats,
     preferences,
     recentActivities,
+    currentUser,
     isLoggedIn,
     updateStats,
     updatePreferences,
@@ -133,5 +210,11 @@ export const useUserStore = defineStore('user', () => {
     addWordsLearned,
     addStudyTime,
     completeTask,
+    login,
+    register,
+    logout,
+    logoutAll,
+    validateEmail,
+    validatePassword,
   }
 })

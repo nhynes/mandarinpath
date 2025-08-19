@@ -1,0 +1,6 @@
+packages:
+  - 'app'
+  - 'tests'
+
+onlyBuiltDependencies:
+  - esbuild

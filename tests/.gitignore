@@ -1,0 +1,12 @@
+# Test results and reports
+/test-results/
+/playwright-report/
+
+# Playwright artifacts
+/playwright/.cache/
+
+# Dependencies
+node_modules/
+
+# Logs
+*.log

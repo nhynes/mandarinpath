@@ -1,5 +1,36 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import { useUserStore } from '@/stores/user'
+import { apiClient } from '@/services/api'
+import AuthModal from '@/components/AuthModal.vue'
+
+const userStore = useUserStore()
+const showAuthModal = ref(false)
+const authModalMode = ref<'login' | 'register'>('login')
+
+// Initialize CSRF token on app startup
+onMounted(async () => {
+  await apiClient.initializeCsrf()
+})
+
+function openAuthModal(mode: 'login' | 'register' = 'login') {
+  authModalMode.value = mode
+  showAuthModal.value = true
+}
+
+function closeAuthModal() {
+  showAuthModal.value = false
+}
+
+function handleAuthSuccess() {
+  showAuthModal.value = false
+  // Could show a success toast here
+}
+
+async function handleLogout() {
+  await userStore.logout()
+}
 </script>
 
 <template>
@@ -12,18 +43,34 @@ import { RouterLink, RouterView } from 'vue-router'
         </div>
 
         <nav class="main-nav">
-          <RouterLink to="/" class="nav-link">
-            <span class="nav-icon">🏠</span>
-            <span class="nav-text">Home</span>
-          </RouterLink>
-          <RouterLink to="/profile" class="nav-link">
-            <span class="nav-icon">👤</span>
-            <span class="nav-text">Profile</span>
-          </RouterLink>
-          <RouterLink to="/loading" class="nav-link">
-            <span class="nav-icon">📚</span>
-            <span class="nav-text">Load Words</span>
-          </RouterLink>
+          <template v-if="userStore.isLoggedIn">
+            <RouterLink to="/" class="nav-link">
+              <span class="nav-icon">🏠</span>
+              <span class="nav-text">Home</span>
+            </RouterLink>
+            <RouterLink to="/profile" class="nav-link">
+              <span class="nav-icon">👤</span>
+              <span class="nav-text">Profile</span>
+            </RouterLink>
+            <RouterLink to="/loading" class="nav-link">
+              <span class="nav-icon">📚</span>
+              <span class="nav-text">Load Words</span>
+            </RouterLink>
+            <button @click="handleLogout" class="nav-link logout-button">
+              <span class="nav-icon">🚪</span>
+              <span class="nav-text">Logout</span>
+            </button>
+          </template>
+          <template v-else>
+            <button @click="openAuthModal('login')" class="nav-link auth-button">
+              <span class="nav-icon">🔐</span>
+              <span class="nav-text">Sign In</span>
+            </button>
+            <button @click="openAuthModal('register')" class="nav-link auth-button">
+              <span class="nav-icon">✨</span>
+              <span class="nav-text">Sign Up</span>
+            </button>
+          </template>
         </nav>
       </div>
     </header>
@@ -31,6 +78,13 @@ import { RouterLink, RouterView } from 'vue-router'
     <main class="app-main">
       <RouterView />
     </main>
+
+    <AuthModal
+      :show="showAuthModal"
+      :default-mode="authModalMode"
+      @close="closeAuthModal"
+      @success="handleAuthSuccess"
+    />
   </div>
 </template>
 
@@ -97,6 +151,14 @@ import { RouterLink, RouterView } from 'vue-router'
   color: white;
   border-radius: 6px;
   min-width: 60px;
+}
+
+.auth-button,
+.logout-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
 }
 
 .nav-link:hover {

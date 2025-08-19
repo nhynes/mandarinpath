@@ -1,0 +1,41 @@
+{
+  "name": "mandarinpath",
+  "version": "1.0.0",
+  "description": "Chinese language learning application with full-stack automation",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm run --parallel dev",
+    "dev:app": "pnpm --filter app run dev",
+    "dev:backend": "cd backend && cargo run",
+    "build": "pnpm run --recursive build",
+    "build:app": "pnpm --filter app run build",
+    "build:backend": "cd backend && cargo build --release",
+    "test": "pnpm run --recursive test",
+    "test:app": "pnpm --filter app run test",
+    "test:backend": "cd backend && cargo test",
+    "test:e2e": "pnpm --filter e2e-tests run test",
+    "test:e2e:ui": "pnpm --filter e2e-tests run test:ui",
+    "test:e2e:headed": "pnpm --filter e2e-tests run test:headed",
+    "test:e2e:debug": "pnpm --filter e2e-tests run test:debug",
+    "lint": "pnpm run --recursive lint",
+    "lint:app": "pnpm --filter app run lint",
+    "lint:backend": "cd backend && cargo clippy",
+    "format": "pnpm run --recursive format",
+    "format:app": "pnpm --filter app run format",
+    "format:backend": "cd backend && cargo fmt",
+    "clean": "pnpm run --recursive clean && cd backend && cargo clean",
+    "setup": "pnpm install && cd tests && pnpm install && pnpm run install-deps"
+  },
+  "workspaces": [
+    "app",
+    "tests"
+  ],
+  "devDependencies": {
+    "npm-run-all2": "^7.0.2"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=9.0.0"
+  }
+}
