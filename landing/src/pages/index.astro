@@ -1,0 +1,236 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout 
+  title="MandarinPath — AI-Powered Chinese Language Learning" 
+  description="Your intelligent Chinese language tutor that makes learning both fun and productive. Focus on real-world skills with personalized speaking, reading, and writing practice."
+>
+  <Header />
+
+  <!-- Hero Section -->
+  <section class="relative overflow-hidden bg-gradient-to-br from-mandarin-50 to-orange-50">
+    <div class="absolute inset-0 -z-10 bg-gradient-to-b from-mandarin-100/80 to-transparent"></div>
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-8 pb-16 lg:pt-12 lg:pb-20 grid lg:grid-cols-12 gap-6 items-center">
+      <div class="lg:col-span-7">
+        <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight text-slate-900">
+          Learn Chinese with Your
+          <span class="text-mandarin-600">AI Tutor</span>
+        </h1>
+        <h2 class="mt-2 text-xl sm:text-2xl text-slate-700 font-light">
+          智能中文学习 (Zhìnéng Zhōngwén Xuéxí)
+        </h2>
+        <p class="mt-6 text-lg text-slate-700 max-w-xl">
+          Your AI-powered Chinese language tutor that makes learning both fun and productive. 
+          Focus on real-world skills with personalized speaking, reading, and writing practice.
+        </p>
+        
+        <div class="mt-8 flex flex-col sm:flex-row gap-4">
+          <a
+            href="https://app.mandarinpath.com"
+            class="inline-flex items-center justify-center rounded-xl border border-transparent bg-mandarin-600 px-6 py-3 text-base font-semibold text-white shadow-soft hover:bg-mandarin-700 focus:outline-none focus:ring-2 focus:ring-mandarin-500 focus:ring-offset-2 transition"
+          >
+            Start Learning Free
+          </a>
+          <a
+            href="#how-it-works"
+            class="inline-flex items-center justify-center rounded-xl border border-slate-300 bg-white px-6 py-3 text-base font-semibold text-slate-700 shadow-soft hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-mandarin-500 focus:ring-offset-2 transition"
+          >
+            How it Works
+          </a>
+        </div>
+        
+        <p class="mt-4 text-sm text-slate-600">
+          No due dates, no pressure — just intelligent learning that adapts to you
+        </p>
+      </div>
+
+      <div class="lg:col-span-5 flex justify-center">
+        <div class="relative">
+          <!-- Placeholder for hero image/animation -->
+          <div class="w-80 h-80 bg-gradient-to-br from-mandarin-200 to-orange-200 rounded-3xl shadow-xl flex items-center justify-center">
+            <div class="text-center">
+              <div class="text-6xl mb-4">📱</div>
+              <div class="text-2xl font-bold text-slate-700 mb-2">MandarinPath</div>
+              <div class="text-sm text-slate-600">AI-Powered Learning</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section id="features" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+    <div class="mx-auto max-w-3xl text-center">
+      <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">
+        Real-World Chinese Skills
+      </h2>
+      <p class="mt-4 text-lg text-slate-600">
+        No rote memorization. Focus on practical speaking, reading, and writing skills 
+        with AI-powered feedback and intelligent spaced repetition.
+      </p>
+    </div>
+
+    <div class="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      <!-- Speaking Practice -->
+      <div class="rounded-2xl border border-slate-200 bg-white p-8 shadow-soft hover:shadow-lg transition">
+        <div class="h-12 w-12 rounded-xl bg-mandarin-100 text-mandarin-700 inline-flex items-center justify-center text-2xl font-bold mb-6">
+          🗣️
+        </div>
+        <h3 class="text-xl font-semibold text-slate-900 mb-3">Speaking Practice</h3>
+        <p class="text-slate-600 leading-relaxed">
+          AI-powered pronunciation training with instant feedback. Practice real conversations 
+          and build muscle memory for natural Chinese speech.
+        </p>
+      </div>
+
+      <!-- Reading Comprehension -->
+      <div class="rounded-2xl border border-slate-200 bg-white p-8 shadow-soft hover:shadow-lg transition">
+        <div class="h-12 w-12 rounded-xl bg-mandarin-100 text-mandarin-700 inline-flex items-center justify-center text-2xl font-bold mb-6">
+          📖
+        </div>
+        <h3 class="text-xl font-semibold text-slate-900 mb-3">Reading Comprehension</h3>
+        <p class="text-slate-600 leading-relaxed">
+          Graded stories and articles that build vocabulary naturally. Learn words in context 
+          with pinyin support and interactive annotations.
+        </p>
+      </div>
+
+      <!-- Character Writing -->
+      <div class="rounded-2xl border border-slate-200 bg-white p-8 shadow-soft hover:shadow-lg transition">
+        <div class="h-12 w-12 rounded-xl bg-mandarin-100 text-mandarin-700 inline-flex items-center justify-center text-2xl font-bold mb-6">
+          ✍️
+        </div>
+        <h3 class="text-xl font-semibold text-slate-900 mb-3">Character Writing</h3>
+        <p class="text-slate-600 leading-relaxed">
+          Learn stroke order and character recognition on touch devices. Build basic 
+          writing skills for enhanced character understanding.
+        </p>
+      </div>
+
+      <!-- Smart Learning -->
+      <div class="rounded-2xl border border-slate-200 bg-white p-8 shadow-soft hover:shadow-lg transition">
+        <div class="h-12 w-12 rounded-xl bg-mandarin-100 text-mandarin-700 inline-flex items-center justify-center text-2xl font-bold mb-6">
+          🧠
+        </div>
+        <h3 class="text-xl font-semibold text-slate-900 mb-3">Intelligent Difficulty</h3>
+        <p class="text-slate-600 leading-relaxed">
+          AI determines difficulty based on your performance patterns, not just individual 
+          card history. Skip what you know, focus on what you need.
+        </p>
+      </div>
+
+      <!-- No Pressure -->
+      <div class="rounded-2xl border border-slate-200 bg-white p-8 shadow-soft hover:shadow-lg transition">
+        <div class="h-12 w-12 rounded-xl bg-mandarin-100 text-mandarin-700 inline-flex items-center justify-center text-2xl font-bold mb-6">
+          ⏰
+        </div>
+        <h3 class="text-xl font-semibold text-slate-900 mb-3">No "Due" Words</h3>
+        <p class="text-slate-600 leading-relaxed">
+          Unlike traditional SRS systems, there's no concept of overdue cards. No demoralizing 
+          catch-up sessions — just productive learning.
+        </p>
+      </div>
+
+      <!-- Instant Feedback -->
+      <div class="rounded-2xl border border-slate-200 bg-white p-8 shadow-soft hover:shadow-lg transition">
+        <div class="h-12 w-12 rounded-xl bg-mandarin-100 text-mandarin-700 inline-flex items-center justify-center text-2xl font-bold mb-6">
+          ⚡
+        </div>
+        <h3 class="text-xl font-semibold text-slate-900 mb-3">Instant AI Feedback</h3>
+        <p class="text-slate-600 leading-relaxed">
+          All tasks are graded automatically by AI for immediate, personalized, and 
+          cost-effective learning. No waiting for human tutors.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section id="how-it-works" class="bg-slate-50 border-y border-slate-100">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+      <div class="mx-auto max-w-3xl text-center mb-16">
+        <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">
+          How MandarinPath Works
+        </h2>
+        <p class="mt-4 text-lg text-slate-600">
+          A fully automated language tutor that adapts to your learning style and goals
+        </p>
+      </div>
+
+      <div class="grid gap-8 lg:grid-cols-3">
+        <!-- Step 1 -->
+        <div class="text-center">
+          <div class="mx-auto h-16 w-16 rounded-full bg-mandarin-100 text-mandarin-700 flex items-center justify-center text-2xl font-bold mb-6">
+            1
+          </div>
+          <h3 class="text-xl font-semibold text-slate-900 mb-4">Choose Your Tasks</h3>
+          <p class="text-slate-600 leading-relaxed">
+            Select which types of practice you want: speaking at home, reading anywhere, 
+            or writing on touch devices. You control your learning experience.
+          </p>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="text-center">
+          <div class="mx-auto h-16 w-16 rounded-full bg-mandarin-100 text-mandarin-700 flex items-center justify-center text-2xl font-bold mb-6">
+            2
+          </div>
+          <h3 class="text-xl font-semibold text-slate-900 mb-4">AI Adapts to You</h3>
+          <p class="text-slate-600 leading-relaxed">
+            Our AI determines which words need attention based on your performance patterns 
+            and component word knowledge. Smart scheduling, not arbitrary repetition.
+          </p>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="text-center">
+          <div class="mx-auto h-16 w-16 rounded-full bg-mandarin-100 text-mandarin-700 flex items-center justify-center text-2xl font-bold mb-6">
+            3
+          </div>
+          <h3 class="text-xl font-semibold text-slate-900 mb-4">Track Your Progress</h3>
+          <p class="text-slate-600 leading-relaxed">
+            Clear progress indicators and session history keep you motivated. See your 
+            improvement across speaking, reading, and writing skills.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section id="get-started" class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
+    <div class="rounded-3xl bg-gradient-to-br from-mandarin-600 to-mandarin-700 p-8 lg:p-16 text-center text-white">
+      <h2 class="font-display text-3xl sm:text-4xl font-bold tracking-tight mb-6">
+        Ready to Start Learning Chinese?
+      </h2>
+      <p class="text-xl text-mandarin-100 mb-8 max-w-2xl mx-auto">
+        Join thousands of learners who are building real Chinese language skills with AI-powered personalized instruction.
+      </p>
+      
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a
+          href="https://app.mandarinpath.com"
+          class="inline-flex items-center justify-center rounded-xl border-2 border-white bg-white px-8 py-4 text-lg font-semibold text-mandarin-700 shadow-soft hover:bg-mandarin-50 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-mandarin-600 transition"
+        >
+          Start Learning Free
+        </a>
+        <a
+          href="https://app.mandarinpath.com"
+          class="inline-flex items-center justify-center rounded-xl border-2 border-white bg-transparent px-8 py-4 text-lg font-semibold text-white hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-mandarin-600 transition"
+        >
+          Try Demo
+        </a>
+      </div>
+      
+      <p class="mt-6 text-sm text-mandarin-200">
+        No credit card required • Start learning immediately • Cancel anytime
+      </p>
+    </div>
+  </section>
+
+  <Footer />
+</Layout>

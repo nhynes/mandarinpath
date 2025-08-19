@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import { ref, onMounted } from 'vue'
+import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
+import { ref, onMounted, computed } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { apiClient } from '@/services/api'
 import AuthModal from '@/components/AuthModal.vue'
@@ -8,10 +8,17 @@ import AuthModal from '@/components/AuthModal.vue'
 const userStore = useUserStore()
 const showAuthModal = ref(false)
 const authModalMode = ref<'login' | 'register'>('login')
+const route = useRoute()
+const router = useRouter()
 
 // Initialize CSRF token on app startup
 onMounted(async () => {
   await apiClient.initializeCsrf()
+})
+
+// Determine if we're in the app (authenticated routes) or on landing pages
+const isInApp = computed(() => {
+  return route.meta.requiresAuth === true
 })
 
 function openAuthModal(mode: 'login' | 'register' = 'login') {
@@ -27,26 +34,33 @@ function handleAuthSuccess() {
   showAuthModal.value = false
   // Could show a success toast here
 }
+
+function handleLogoClick() {
+  if (isInApp.value) {
+    // If we're in the app, go to app home
+    router.push({ name: 'home' })
+  } else {
+    // If we're on landing/welcome page, go to welcome
+    router.push({ name: 'welcome' })
+  }
+}
 </script>
 
 <template>
   <div id="app">
     <header class="app-header">
       <div class="header-container">
-        <div class="logo-section">
+        <div class="logo-section" @click="handleLogoClick">
           <h1 class="app-title">MandarinPath</h1>
           <p class="app-subtitle">智能中文学习</p>
         </div>
 
         <nav class="main-nav">
           <template v-if="userStore.isLoggedIn">
-            <RouterLink to="/" class="nav-link">
-              <span class="nav-icon">🏠</span>
-              <span class="nav-text">Home</span>
-            </RouterLink>
-            <RouterLink to="/loading" class="nav-link">
-              <span class="nav-icon">📚</span>
-              <span class="nav-text">Load Words</span>
+            <!-- Only show Learning Hub button when not already in the app -->
+            <RouterLink v-if="!isInApp" to="/app" class="nav-link">
+              <span class="nav-icon">🚀</span>
+              <span class="nav-text">Learning Hub</span>
             </RouterLink>
             <RouterLink to="/profile" class="nav-link user-profile-link">
               <span class="nav-icon">👤</span>
@@ -114,6 +128,12 @@ function handleAuthSuccess() {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.logo-section:hover {
+  opacity: 0.8;
 }
 
 .app-title {

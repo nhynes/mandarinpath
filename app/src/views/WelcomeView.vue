@@ -36,7 +36,25 @@
       </div>
 
       <div class="auth-section">
-        <div class="auth-card">
+        <!-- Authenticated user content -->
+        <div v-if="isAuthenticated" class="auth-card">
+          <h3>Welcome back! 🎉</h3>
+          <p>Ready to continue your Chinese learning journey?</p>
+
+          <div class="auth-buttons">
+            <button @click="goToApp" class="auth-btn primary">
+              <span class="auth-btn-icon">🚀</span>
+              Launch Learning Hub
+            </button>
+            <button @click="goToProfile" class="auth-btn secondary">
+              <span class="auth-btn-icon">👤</span>
+              View Profile
+            </button>
+          </div>
+        </div>
+
+        <!-- Non-authenticated user content -->
+        <div v-else class="auth-card">
           <h3>Get Started Today</h3>
           <p>Create your account and start learning Chinese! 🇨🇳</p>
 
@@ -79,23 +97,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { useUserStore } from '@/stores/user'
 import AuthModal from '@/components/AuthModal.vue'
+import { authService } from '@/services/auth'
 
 const router = useRouter()
-const userStore = useUserStore()
 
 const showAuthModal = ref(false)
 const authModalMode = ref<'login' | 'register'>('login')
-
-onMounted(() => {
-  // Redirect if already authenticated
-  if (userStore.isLoggedIn) {
-    router.push({ name: 'home' })
-  }
-})
+const isAuthenticated = computed(() => authService.isAuthenticated())
 
 function openAuthModal(mode: 'login' | 'register') {
   authModalMode.value = mode
@@ -109,6 +120,14 @@ function closeAuthModal() {
 function handleAuthSuccess() {
   showAuthModal.value = false
   router.push({ name: 'home' })
+}
+
+function goToApp() {
+  router.push({ name: 'home' })
+}
+
+function goToProfile() {
+  router.push({ name: 'profile' })
 }
 </script>
 

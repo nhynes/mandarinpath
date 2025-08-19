@@ -7,6 +7,12 @@ const router = createRouter({
   routes: [
     {
       path: '/',
+      name: 'welcome',
+      component: () => import('../views/WelcomeView.vue'),
+      meta: { requiresAuth: false },
+    },
+    {
+      path: '/app',
       name: 'home',
       component: HomeView,
       meta: { requiresAuth: true },
@@ -41,12 +47,6 @@ const router = createRouter({
       component: () => import('../views/DrawingTaskView.vue'),
       meta: { requiresAuth: true },
     },
-    {
-      path: '/welcome',
-      name: 'welcome',
-      component: () => import('../views/WelcomeView.vue'),
-      meta: { requiresAuth: false },
-    },
   ],
 })
 
@@ -64,12 +64,6 @@ router.beforeEach(async (to, from, next) => {
       next({ name: 'welcome' })
       return
     }
-  }
-
-  // If going to welcome page but already authenticated, redirect to home
-  if (to.name === 'welcome' && authService.isAuthenticated()) {
-    next({ name: 'home' })
-    return
   }
 
   next()

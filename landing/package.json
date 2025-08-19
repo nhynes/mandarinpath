@@ -1,0 +1,46 @@
+{
+  "name": "mandarinpath-landing",
+  "type": "module",
+  "version": "0.0.1",
+  "homepage": "https://mandarinpath.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mandarinpath/mandarinpath.git"
+  },
+  "keywords": [
+    "chinese",
+    "language-learning",
+    "mandarin",
+    "ai-tutor",
+    "education"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "check": "astro check",
+    "type-check": "astro check",
+    "lint": "prettier --check . && astro check",
+    "lint:fix": "prettier --write .",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.5.0",
+    "astro": "^5.6.1",
+    "sharp": "^0.34.2"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/tailwind": "^6.0.2",
+    "prettier": "^3.6.2",
+    "prettier-plugin-astro": "^0.14.1",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.9.2"
+  }
+}
