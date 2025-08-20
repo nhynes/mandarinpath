@@ -1,0 +1,236 @@
+/**
+ * MandarinPath Design System - Design Tokens
+ * Central source of truth for all design values
+ */
+
+export const colors = {
+  // Brand colors - Primary red/mandarin palette
+  brand: {
+    50: '#f0f9ff',
+    100: '#e0f2fe',
+    200: '#bae6fd',
+    300: '#7dd3fc',
+    400: '#38bdf8',
+    500: '#0ea5e9',
+    600: '#0284c7',
+    700: '#0369a1',
+    800: '#075985',
+    900: '#0c4a6e',
+  },
+  
+  // Mandarin red - Primary brand color
+  mandarin: {
+    50: '#fef2f2',
+    100: '#fee2e2',
+    200: '#fecaca',
+    300: '#fca5a5',
+    400: '#f87171',
+    500: '#ef4444',
+    600: '#dc2626', // Primary brand color
+    700: '#b91c1c',
+    800: '#991b1b',
+    900: '#7f1d1d',
+  },
+
+  // Neutral colors - Modern slate palette
+  slate: {
+    50: '#f8fafc',
+    100: '#f1f5f9',
+    200: '#e2e8f0',
+    300: '#cbd5e1',
+    400: '#94a3b8',
+    500: '#64748b',
+    600: '#475569',
+    700: '#334155',
+    800: '#1e293b',
+    900: '#0f172a',
+  },
+
+  // Semantic colors
+  semantic: {
+    success: '#10b981',
+    warning: '#f59e0b',
+    error: '#ef4444',
+    info: '#3b82f6',
+  }
+} as const
+
+export const typography = {
+  fontFamily: {
+    display: ['Inter', 'system-ui', 'sans-serif'],
+    body: ['Inter', 'system-ui', 'sans-serif'],
+    mono: ['ui-monospace', 'SFMono-Regular', 'Consolas', 'monospace'],
+  },
+  
+  fontSize: {
+    xs: '0.75rem',
+    sm: '0.875rem',
+    base: '1rem',
+    lg: '1.125rem',
+    xl: '1.25rem',
+    '2xl': '1.5rem',
+    '3xl': '1.875rem',
+    '4xl': '2.25rem',
+    '5xl': '3rem',
+    '6xl': '3.75rem',
+  },
+
+  fontWeight: {
+    light: '300',
+    normal: '400',
+    medium: '500',
+    semibold: '600',
+    bold: '700',
+    extrabold: '800',
+  },
+
+  lineHeight: {
+    tight: '1.25',
+    snug: '1.375',
+    normal: '1.5',
+    relaxed: '1.625',
+    loose: '2',
+  },
+
+  letterSpacing: {
+    tighter: '-0.05em',
+    tight: '-0.025em',
+    normal: '0em',
+    wide: '0.025em',
+    wider: '0.05em',
+    widest: '0.1em',
+  }
+} as const
+
+export const spacing = {
+  0: '0px',
+  1: '0.25rem',
+  2: '0.5rem',
+  3: '0.75rem',
+  4: '1rem',
+  5: '1.25rem',
+  6: '1.5rem',
+  8: '2rem',
+  10: '2.5rem',
+  12: '3rem',
+  16: '4rem',
+  20: '5rem',
+  24: '6rem',
+  32: '8rem',
+  40: '10rem',
+  48: '12rem',
+  56: '14rem',
+  64: '16rem',
+} as const
+
+export const borderRadius = {
+  none: '0px',
+  sm: '0.125rem',
+  default: '0.25rem',
+  md: '0.375rem',
+  lg: '0.5rem',
+  xl: '0.75rem',
+  '2xl': '1rem',
+  '3xl': '1.5rem',
+  full: '9999px',
+} as const
+
+export const boxShadow = {
+  soft: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+  medium: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+  large: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+} as const
+
+export const animation = {
+  duration: {
+    fast: '0.15s',
+    normal: '0.2s',
+    slow: '0.3s',
+  },
+  
+  easing: {
+    linear: 'linear',
+    in: 'cubic-bezier(0.4, 0, 1, 1)',
+    out: 'cubic-bezier(0, 0, 0.2, 1)',
+    inOut: 'cubic-bezier(0.4, 0, 0.2, 1)',
+  }
+} as const
+
+// Component-specific tokens
+export const components = {
+  button: {
+    borderRadius: borderRadius.xl,
+    padding: {
+      sm: `${spacing[2]} ${spacing[3]}`,
+      md: `${spacing[3]} ${spacing[4]}`,
+      lg: `${spacing[4]} ${spacing[6]}`,
+    },
+    fontSize: {
+      sm: typography.fontSize.sm,
+      md: typography.fontSize.base,
+      lg: typography.fontSize.lg,
+    }
+  },
+  
+  card: {
+    borderRadius: borderRadius['2xl'],
+    padding: spacing[6],
+    shadow: boxShadow.soft,
+  },
+
+  modal: {
+    borderRadius: borderRadius['2xl'],
+    shadow: boxShadow.large,
+    padding: spacing[6],
+  },
+
+  input: {
+    borderRadius: borderRadius.lg,
+    padding: `${spacing[3]} ${spacing[4]}`,
+    fontSize: typography.fontSize.base,
+  }
+} as const
+
+// Brand-specific values
+export const brand = {
+  logo: {
+    character: '中',
+    backgroundColor: colors.mandarin[600],
+    color: '#ffffff',
+    borderRadius: borderRadius.lg,
+    size: {
+      sm: spacing[8],
+      md: spacing[10],
+      lg: spacing[12],
+    }
+  },
+  
+  gradients: {
+    primary: 'linear-gradient(135deg, #fef2f2 0%, #fed7aa 100%)',
+    hero: 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)',
+    card: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
+  }
+} as const
+
+// Export all tokens as a single object for convenience
+export const designTokens = {
+  colors,
+  typography,
+  spacing,
+  borderRadius,
+  boxShadow,
+  animation,
+  components,
+  brand,
+} as const
+
+// Type exports for TypeScript consumers
+export type Colors = typeof colors
+export type Typography = typeof typography
+export type Spacing = typeof spacing
+export type BorderRadius = typeof borderRadius
+export type BoxShadow = typeof boxShadow
+export type Animation = typeof animation
+export type Components = typeof components
+export type Brand = typeof brand
+export type DesignTokens = typeof designTokens

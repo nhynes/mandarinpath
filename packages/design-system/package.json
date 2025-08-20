@@ -1,0 +1,47 @@
+{
+  "name": "@mandarinpath/design-system",
+  "version": "1.0.0",
+  "description": "MandarinPath Design System - Shared branding and UI components",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./tailwind": {
+      "import": "./dist/tailwind.config.js",
+      "require": "./dist/tailwind.config.js"
+    },
+    "./tokens": {
+      "import": "./dist/tokens.js",
+      "types": "./dist/tokens.d.ts"
+    }
+  },
+  "files": [
+    "dist/**/*",
+    "src/**/*"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": [
+    "design-system",
+    "tailwind",
+    "branding",
+    "ui",
+    "chinese-learning"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.9.2",
+    "tsup": "^8.0.0",
+    "@types/node": "^22.14.0"
+  },
+  "peerDependencies": {
+    "tailwindcss": "^3.4.0"
+  }
+}
