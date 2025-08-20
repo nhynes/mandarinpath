@@ -7,8 +7,35 @@ const router = createRouter({
   routes: [
     {
       path: '/',
+      name: 'root',
+      redirect: () => {
+        const isAuthenticated = authService.isAuthenticated()
+        if (isAuthenticated) {
+          // If logged in, go to dashboard
+          return { name: 'home' }
+        } else {
+          // If not logged in, check if onboarding was completed
+          const onboardingData = localStorage.getItem('onboarding_data')
+          if (onboardingData) {
+            // Onboarding completed but not logged in, show welcome
+            return { name: 'welcome' }
+          } else {
+            // No onboarding yet, start onboarding
+            return { name: 'onboarding' }
+          }
+        }
+      },
+    },
+    {
+      path: '/welcome',
       name: 'welcome',
       component: () => import('../views/WelcomeView.vue'),
+      meta: { requiresAuth: false },
+    },
+    {
+      path: '/onboarding',
+      name: 'onboarding',
+      component: () => import('../views/OnboardingView.vue'),
       meta: { requiresAuth: false },
     },
     {

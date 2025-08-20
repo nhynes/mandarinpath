@@ -32,7 +32,8 @@ function closeAuthModal() {
 
 function handleAuthSuccess() {
   showAuthModal.value = false
-  // Could show a success toast here
+  // Redirect to dashboard after successful authentication
+  router.push({ name: 'home' })
 }
 
 function handleLogoClick() {
@@ -40,8 +41,8 @@ function handleLogoClick() {
     // If we're in the app, go to app home
     router.push({ name: 'home' })
   } else {
-    // If we're on landing/welcome page, go to welcome
-    router.push({ name: 'welcome' })
+    // If we're on landing/welcome/onboarding page, go to root
+    router.push({ name: 'root' })
   }
 }
 </script>
