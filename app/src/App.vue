@@ -41,7 +41,7 @@ function handleLogoClick() {
     // If we're in the app, go to app home
     router.push({ name: 'home' })
   } else {
-    // If we're on landing/welcome/onboarding page, go to root
+    // If we're on auth/onboarding page, go to root
     router.push({ name: 'root' })
   }
 }

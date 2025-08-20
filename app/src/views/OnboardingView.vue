@@ -663,8 +663,8 @@ async function completeOnboarding() {
 
     userStore.updatePreferences(preferences)
 
-    // Navigate to dashboard
-    router.push({ name: 'home' })
+    // Navigate to auth screen to sign up/sign in
+    router.push({ name: 'auth' })
   } catch (error) {
     console.error('Failed to complete onboarding:', error)
     // Show error message to user

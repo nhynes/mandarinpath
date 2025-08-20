@@ -17,8 +17,8 @@ const router = createRouter({
           // If not logged in, check if onboarding was completed
           const onboardingData = localStorage.getItem('onboarding_data')
           if (onboardingData) {
-            // Onboarding completed but not logged in, show welcome
-            return { name: 'welcome' }
+            // Onboarding completed but not logged in, show auth prompt
+            return { name: 'auth' }
           } else {
             // No onboarding yet, start onboarding
             return { name: 'onboarding' }
@@ -27,9 +27,9 @@ const router = createRouter({
       },
     },
     {
-      path: '/welcome',
-      name: 'welcome',
-      component: () => import('../views/WelcomeView.vue'),
+      path: '/auth',
+      name: 'auth',
+      component: () => import('../views/AuthView.vue'),
       meta: { requiresAuth: false },
     },
     {
@@ -87,8 +87,8 @@ router.beforeEach(async (to, from, next) => {
     const refreshed = await authService.refreshAccessToken()
 
     if (!refreshed) {
-      // Redirect to welcome page if not authenticated
-      next({ name: 'welcome' })
+      // Redirect to auth page if not authenticated
+      next({ name: 'auth' })
       return
     }
   }
