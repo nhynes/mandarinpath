@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-axum = { version = "0.7", features = ["macros"] }
+axum = { version = "0.7", features = ["macros", "multipart"] }
 tokio = { version = "1.0", features = ["full"] }
 tower = { version = "0.4", features = ["util"] }
 tower-http = { version = "0.5", features = ["cors", "trace", "compression-gzip"] }
@@ -23,6 +23,15 @@ rand = "0.8"
 hex = "0.4"
 argon2 = "0.5"
 secrecy = "0.8"
+# Speech evaluation dependencies
+tokio-tungstenite = { version = "0.21", features = ["native-tls"] }
+tungstenite = "0.21"
+url = "2.5"
+base64 = "0.21"
+sha2 = "0.10"
+hmac = "0.12"
+bytes = "1.5"
+futures-util = "0.3"
 
 [dev-dependencies]
 axum-test = "14.7"

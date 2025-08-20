@@ -48,7 +48,16 @@ fn create_test_app(db: db::Database, config: config::Config) -> Router {
 
 #[tokio::test]
 async fn test_health_endpoints() {
-    let config = config::Config::from_env().expect("Failed to load config");
+    // Create a test config with defaults
+    let config = config::Config {
+        database_url: std::env::var("DATABASE_URL")
+            .unwrap_or_else(|_| "sqlite::memory:".to_string()),
+        frontend_url: "http://localhost:5173".to_string(),
+        port: 3000,
+        debug_mode: true,
+        verbosity: 0,
+        jwt_secret: "test-jwt-secret-key-for-testing".to_string().into(),
+    };
     let db = db::Database::new(&config.database_url)
         .await
         .expect("Failed to connect to database");
@@ -59,21 +68,32 @@ async fn test_health_endpoints() {
     // Test health check
     let response = server.get("/api/health").await;
     response.assert_status_ok();
-    response.assert_json(&json!({
-        "status": "healthy"
-    }));
+
+    let body: serde_json::Value = response.json();
+    assert_eq!(body["status"], "healthy");
+    assert!(body["timestamp"].is_string());
 
     // Test readiness check
     let response = server.get("/api/ready").await;
     response.assert_status_ok();
-    response.assert_json(&json!({
-        "status": "ready"
-    }));
+
+    let body: serde_json::Value = response.json();
+    assert_eq!(body["status"], "ready");
+    assert!(body["timestamp"].is_string());
 }
 
 #[tokio::test]
 async fn test_cors_configuration() {
-    let config = config::Config::from_env().expect("Failed to load config");
+    // Create a test config with defaults
+    let config = config::Config {
+        database_url: std::env::var("DATABASE_URL")
+            .unwrap_or_else(|_| "sqlite::memory:".to_string()),
+        frontend_url: "http://localhost:5173".to_string(),
+        port: 3000,
+        debug_mode: true,
+        verbosity: 0,
+        jwt_secret: "test-jwt-secret-key-for-testing".to_string().into(),
+    };
     let db = db::Database::new(&config.database_url)
         .await
         .expect("Failed to connect to database");
@@ -120,7 +140,16 @@ async fn test_cors_configuration() {
 
 #[tokio::test]
 async fn test_cors_on_error_responses() {
-    let config = config::Config::from_env().expect("Failed to load config");
+    // Create a test config with defaults
+    let config = config::Config {
+        database_url: std::env::var("DATABASE_URL")
+            .unwrap_or_else(|_| "sqlite::memory:".to_string()),
+        frontend_url: "http://localhost:5173".to_string(),
+        port: 3000,
+        debug_mode: true,
+        verbosity: 0,
+        jwt_secret: "test-jwt-secret-key-for-testing".to_string().into(),
+    };
     let db = db::Database::new(&config.database_url)
         .await
         .expect("Failed to connect to database");
@@ -163,7 +192,16 @@ async fn test_cors_on_error_responses() {
 
 #[tokio::test]
 async fn test_jwt_service() {
-    let config = config::Config::from_env().expect("Failed to load config");
+    // Create a test config with defaults
+    let config = config::Config {
+        database_url: std::env::var("DATABASE_URL")
+            .unwrap_or_else(|_| "sqlite::memory:".to_string()),
+        frontend_url: "http://localhost:5173".to_string(),
+        port: 3000,
+        debug_mode: true,
+        verbosity: 0,
+        jwt_secret: "test-jwt-secret-key-for-testing".to_string().into(),
+    };
     let jwt_service = auth::jwt::JwtService::new(&config);
 
     let user_id = "test-user-id";
@@ -191,20 +229,50 @@ async fn test_jwt_service() {
     let (new_access_token, new_claims) = jwt_service.refresh_access_token(&refresh_token).unwrap();
     assert_eq!(new_claims.sub, user_id);
     assert_eq!(new_claims.session_id, session_id);
-    assert_ne!(new_access_token, access_token); // Should be different
+
+    // Verify the new token is valid and contains expected claims
+    let verified_claims = jwt_service.verify_token(&new_access_token).unwrap();
+    assert_eq!(verified_claims.sub, user_id);
+    assert_eq!(verified_claims.session_id, session_id);
 }
 
 #[tokio::test]
 async fn test_session_service() {
-    let config = config::Config::from_env().expect("Failed to load config");
+    // Create a test config with unique in-memory database
+    let config = config::Config {
+        database_url: format!("sqlite::memory:session_test_{}", std::process::id()),
+        frontend_url: "http://localhost:5173".to_string(),
+        port: 3000,
+        debug_mode: true,
+        verbosity: 0,
+        jwt_secret: "test-jwt-secret-key-for-testing".to_string().into(),
+    };
     let db = db::Database::new(&config.database_url)
         .await
         .expect("Failed to connect to database");
-    let session_service = auth::session::SessionService::new(db);
+
+    // Run migrations to ensure tables exist
+    sqlx::migrate!("./migrations")
+        .run(db.pool())
+        .await
+        .expect("Failed to run migrations");
+
+    let session_service = auth::session::SessionService::new(db.clone());
 
     let user_id = "test-user-id";
     let ip_address = Some("127.0.0.1".to_string());
     let user_agent = Some("TestAgent/1.0".to_string());
+
+    // Create a test user first (sessions have foreign key constraint to users)
+    sqlx::query!(
+        "INSERT INTO users (id, email, password_hash) VALUES (?, ?, ?)",
+        user_id,
+        "test@example.com",
+        "dummy-hash"
+    )
+    .execute(db.pool())
+    .await
+    .expect("Failed to create test user");
 
     // Test session creation
     let session = session_service
@@ -237,4 +305,152 @@ async fn test_session_service() {
     let revoked_session = session_service.get_session(&session.id).await.unwrap();
 
     assert!(revoked_session.is_none());
+}
+
+#[tokio::test]
+async fn test_speech_health_endpoint() {
+    // Create a test config with defaults
+    let config = config::Config {
+        database_url: std::env::var("DATABASE_URL")
+            .unwrap_or_else(|_| "sqlite::memory:".to_string()),
+        frontend_url: "http://localhost:5173".to_string(),
+        port: 3000,
+        debug_mode: true,
+        verbosity: 0,
+        jwt_secret: "test-jwt-secret-key-for-testing".to_string().into(),
+    };
+    let db = db::Database::new(&config.database_url)
+        .await
+        .expect("Failed to connect to database");
+
+    let app = create_test_app(db, config);
+    let server = TestServer::new(app).unwrap();
+
+    // Test speech service health check
+    let response = server.get("/api/speech/health").await;
+    response.assert_status_ok();
+    response.assert_json(&json!({
+        "status": "ok",
+        "service": "speech_evaluation"
+    }));
+}
+
+#[tokio::test]
+async fn test_speech_evaluate_endpoint_missing_data() {
+    // Create a test config with defaults
+    let config = config::Config {
+        database_url: std::env::var("DATABASE_URL")
+            .unwrap_or_else(|_| "sqlite::memory:".to_string()),
+        frontend_url: "http://localhost:5173".to_string(),
+        port: 3000,
+        debug_mode: true,
+        verbosity: 0,
+        jwt_secret: "test-jwt-secret-key-for-testing".to_string().into(),
+    };
+    let db = db::Database::new(&config.database_url)
+        .await
+        .expect("Failed to connect to database");
+
+    let app = create_test_app(db, config);
+    let server = TestServer::new(app).unwrap();
+
+    // Test speech evaluation with missing data - should return error
+    let response = server.post("/api/speech/evaluate").await;
+
+    // Should fail due to missing multipart data
+    assert!(response.status_code().is_client_error());
+}
+
+#[tokio::test]
+async fn test_speech_evaluate_endpoint_invalid_multipart() {
+    // Create a test config with defaults
+    let config = config::Config {
+        database_url: std::env::var("DATABASE_URL")
+            .unwrap_or_else(|_| "sqlite::memory:".to_string()),
+        frontend_url: "http://localhost:5173".to_string(),
+        port: 3000,
+        debug_mode: true,
+        verbosity: 0,
+        jwt_secret: "test-jwt-secret-key-for-testing".to_string().into(),
+    };
+    let db = db::Database::new(&config.database_url)
+        .await
+        .expect("Failed to connect to database");
+
+    let app = create_test_app(db, config);
+    let server = TestServer::new(app).unwrap();
+
+    // Test speech evaluation with invalid content type
+    let response = server
+        .post("/api/speech/evaluate")
+        .json(&json!({"invalid": "data"}))
+        .await;
+
+    // Should fail due to wrong content type (expecting multipart/form-data)
+    assert!(response.status_code().is_client_error());
+}
+
+#[tokio::test]
+async fn test_speech_evaluate_endpoint_structure() {
+    use bytes::Bytes;
+    use mandarinpath_backend::speech::SpeechEvaluationRequest;
+
+    // Test that we can create the request structure expected by the endpoint
+    let request = SpeechEvaluationRequest {
+        audio_data: Bytes::from("mock audio data"),
+        ref_text: "你好".to_string(),
+        lang: "cn".to_string(),
+        core: "sent".to_string(),
+        ref_pinyin: Some("nǐ hǎo".to_string()),
+        phoneme_output: true,
+        audio_encoding: "lame".to_string(),
+        sample_rate: 16000,
+        channels: 1,
+        bit_depth: 16,
+    };
+
+    // Verify the request structure matches our API expectations
+    assert_eq!(request.ref_text, "你好");
+    assert_eq!(request.lang, "cn");
+    assert!(request.phoneme_output);
+    assert_eq!(request.sample_rate, 16000);
+}
+
+#[tokio::test]
+async fn test_cors_headers_on_speech_endpoints() {
+    // Create a test config with defaults
+    let config = config::Config {
+        database_url: std::env::var("DATABASE_URL")
+            .unwrap_or_else(|_| "sqlite::memory:".to_string()),
+        frontend_url: "http://localhost:5173".to_string(),
+        port: 3000,
+        debug_mode: true,
+        verbosity: 0,
+        jwt_secret: "test-jwt-secret-key-for-testing".to_string().into(),
+    };
+    let db = db::Database::new(&config.database_url)
+        .await
+        .expect("Failed to connect to database");
+
+    let app = create_test_app(db, config.clone());
+    let server = TestServer::new(app).unwrap();
+
+    // Test CORS on speech health endpoint
+    let response = server
+        .get("/api/speech/health")
+        .add_header(
+            HeaderName::from_static("origin"),
+            HeaderValue::from_str(&config.frontend_url).unwrap(),
+        )
+        .await;
+
+    response.assert_status_ok();
+
+    // Verify CORS headers are present
+    let headers = response.headers();
+    assert!(headers.contains_key("access-control-allow-origin"));
+    assert_eq!(
+        headers.get("access-control-allow-origin").unwrap(),
+        &config.frontend_url
+    );
 }

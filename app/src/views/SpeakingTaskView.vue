@@ -22,10 +22,10 @@
         <div class="recording-section">
           <div class="recording-controls">
             <button
-              @mousedown="startRecording"
-              @mouseup="stopRecording"
-              @touchstart="startRecording"
-              @touchend="stopRecording"
+              @mousedown="handleMouseDown"
+              @mouseup="handleMouseUp"
+              @touchstart="handleTouchStart"
+              @touchend="handleTouchEnd"
               :class="['record-button', { recording: isRecording }]"
               :disabled="isProcessing"
             >
@@ -35,7 +35,12 @@
                 <span v-else>⏳</span>
               </div>
               <div class="record-text">
-                <span v-if="!isRecording && !isProcessing">Hold to Record</span>
+                <span v-if="!isRecording && !isProcessing && !isClickToggleMode"
+                  >Click or Hold to Record</span
+                >
+                <span v-else-if="!isRecording && !isProcessing && isClickToggleMode"
+                  >Click to Stop</span
+                >
                 <span v-else-if="isRecording">Recording...</span>
                 <span v-else>Processing...</span>
               </div>
@@ -43,7 +48,10 @@
           </div>
 
           <div class="recording-help">
-            <p>Hold the button and speak the word clearly</p>
+            <p v-if="!isClickToggleMode">
+              Quick click to toggle recording mode, or hold the button to record
+            </p>
+            <p v-else>Recording mode active - click again to stop and submit</p>
           </div>
         </div>
 
@@ -58,6 +66,39 @@
           <div class="feedback-content">
             <div class="pronunciation-feedback">
               <p class="feedback-text">{{ lastAttempt.feedback }}</p>
+
+              <!-- Detailed word-level feedback -->
+              <div
+                class="word-analysis"
+                v-if="lastAttempt.detailedData && lastAttempt.detailedData.words"
+              >
+                <h4 class="analysis-title">Word Analysis</h4>
+                <div class="word-scores">
+                  <div
+                    v-for="(word, index) in lastAttempt.detailedData.words"
+                    :key="index"
+                    class="word-score-item"
+                    :class="getWordScoreClass(word.scores.pronunciation)"
+                  >
+                    <div class="word-text">{{ word.word }}</div>
+                    <div class="word-pinyin" v-if="word.pinyin">{{ word.pinyin }}</div>
+                    <div class="score-details">
+                      <span class="score-label">Pronunciation:</span>
+                      <span class="score-value">{{ Math.round(word.scores.pronunciation) }}%</span>
+                      <span class="score-label" v-if="word.scores.tone">Tone:</span>
+                      <span class="score-value" v-if="word.scores.tone"
+                        >{{ Math.round(word.scores.tone) }}%</span
+                      >
+                    </div>
+                    <div class="word-issues" v-if="getWordIssues(word).length > 0">
+                      <div class="issue-tag" v-for="issue in getWordIssues(word)" :key="issue">
+                        {{ issue }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div class="audio-comparison" v-if="lastAttempt.recordingUrl">
                 <div class="audio-item">
                   <label>Your pronunciation:</label>
@@ -97,10 +138,46 @@ interface Word {
   definition: string
 }
 
+interface WordScore {
+  word: string
+  pinyin?: string
+  tone?: string
+  scores: {
+    overall: number
+    pronunciation: number
+    tone?: number
+    prominence?: number
+  }
+  read_type: number
+  span?: {
+    start: number
+    end: number
+  }
+  phonemes?: PhonemeScore[]
+}
+
+interface PhonemeScore {
+  phoneme: string
+  pronunciation: number
+  span?: {
+    start: number
+    end: number
+  }
+  tone_index?: number
+  phone?: string
+}
+
+interface SpeechEvaluationData {
+  overall_scores: Record<string, number>
+  words: WordScore[]
+  error?: string
+}
+
 interface Attempt {
   score: number
   feedback: string
   recordingUrl?: string
+  detailedData?: SpeechEvaluationData
 }
 
 const router = useRouter()
@@ -124,9 +201,75 @@ const currentWord = computed(() => words.value[currentWordIndex.value])
 
 let mediaRecorder: MediaRecorder | null = null
 let audioChunks: Blob[] = []
+let mouseDownTime = 0
+const isClickToggleMode = ref(false)
+
+const handleMouseDown = async () => {
+  if (isProcessing.value) return
+  mouseDownTime = Date.now()
+
+  // If already in click toggle mode and recording, do nothing on mousedown
+  if (isClickToggleMode.value && isRecording.value) return
+
+  // Start recording immediately
+  await startRecording()
+}
+
+const handleMouseUp = () => {
+  if (isProcessing.value) return
+
+  const holdDuration = Date.now() - mouseDownTime
+  const isQuickClick = holdDuration < 200 // Less than 200ms is considered a click
+
+  if (isQuickClick) {
+    // This was a click - toggle to click mode
+    isClickToggleMode.value = !isClickToggleMode.value
+
+    // If we're turning off click mode, stop recording
+    if (!isClickToggleMode.value && isRecording.value) {
+      stopRecording()
+    }
+  } else {
+    // This was a hold - stop recording if we're not in click toggle mode
+    if (!isClickToggleMode.value && isRecording.value) {
+      stopRecording()
+    }
+  }
+}
+
+const handleTouchStart = async () => {
+  if (isProcessing.value) return
+  mouseDownTime = Date.now()
+
+  if (isClickToggleMode.value && isRecording.value) return
+
+  await startRecording()
+}
+
+const handleTouchEnd = () => {
+  if (isProcessing.value) return
+
+  const holdDuration = Date.now() - mouseDownTime
+  const isQuickClick = holdDuration < 200
+
+  if (isQuickClick) {
+    isClickToggleMode.value = !isClickToggleMode.value
+
+    if (!isClickToggleMode.value && isRecording.value) {
+      stopRecording()
+    }
+  } else {
+    if (!isClickToggleMode.value && isRecording.value) {
+      stopRecording()
+    }
+  }
+}
 
 const startRecording = async () => {
-  if (isProcessing.value) return
+  if (isProcessing.value || isRecording.value) return
+
+  // Set recording state immediately for visual feedback
+  isRecording.value = true
 
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
@@ -144,9 +287,11 @@ const startRecording = async () => {
     }
 
     mediaRecorder.start()
-    isRecording.value = true
+    // Recording state already set above for immediate feedback
   } catch (error) {
     console.error('Error accessing microphone:', error)
+    // Reset recording state on error
+    isRecording.value = false
     alert('Unable to access microphone. Please check your permissions.')
   }
 }
@@ -162,27 +307,102 @@ const stopRecording = () => {
 const processRecording = async (audioBlob: Blob) => {
   const audioUrl = URL.createObjectURL(audioBlob)
 
-  setTimeout(() => {
-    const scores = [85, 92, 78, 95, 88]
-    const feedbacks = [
-      'Good pronunciation! Try to emphasize the tone changes more clearly.',
-      'Excellent! Your tones are very clear.',
-      'The consonants are clear, but work on the vowel sounds.',
-      'Perfect pronunciation! Well done.',
-      'Good attempt. Focus on the rising tone in the second syllable.',
-    ]
+  try {
+    // Create FormData to send audio and parameters
+    const formData = new FormData()
 
-    const randomIndex = Math.floor(Math.random() * scores.length)
+    // Add audio file
+    formData.append('audio', audioBlob, 'recording.webm')
+
+    // Add parameters
+    const params = {
+      ref_text: currentWord.value.chinese,
+      lang: 'cn',
+      core: 'sent',
+      ref_pinyin: currentWord.value.pinyin,
+      phoneme_output: true,
+    }
+    formData.append('params', JSON.stringify(params))
+
+    // Add audio metadata
+    formData.append('encoding', 'lame') // Will need to convert webm to mp3
+    formData.append('sample_rate', '16000')
+    formData.append('channels', '1')
+    formData.append('bit_depth', '16')
+
+    // Send request to backend
+    const response = await fetch('/api/speech/evaluate', {
+      method: 'POST',
+      body: formData,
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    const result = await response.json()
+
+    if (!result.success) {
+      throw new Error(result.error || 'Speech evaluation failed')
+    }
+
+    const evaluationData = result.data as SpeechEvaluationData
+
+    // Calculate overall score from iFlytek response
+    const overallScore = Math.round(evaluationData.overall_scores?.pronunciation || 0)
+
+    // Generate feedback based on word-level scores
+    const feedback = generateFeedback(evaluationData)
 
     lastAttempt.value = {
-      score: scores[randomIndex],
-      feedback: feedbacks[randomIndex],
+      score: overallScore,
+      feedback: feedback,
+      recordingUrl: audioUrl,
+      detailedData: evaluationData, // Store detailed data for advanced feedback
+    }
+
+    hasAttempted.value = true
+    isProcessing.value = false
+  } catch (error) {
+    console.error('Error processing speech:', error)
+
+    // Fallback to encouraging message
+    lastAttempt.value = {
+      score: 75,
+      feedback: 'Unable to analyze your pronunciation right now. Keep practicing!',
       recordingUrl: audioUrl,
     }
 
     hasAttempted.value = true
     isProcessing.value = false
-  }, 2000)
+  }
+}
+
+const generateFeedback = (evaluationData: SpeechEvaluationData): string => {
+  if (!evaluationData.words || evaluationData.words.length === 0) {
+    return 'Good attempt! Keep practicing your pronunciation.'
+  }
+
+  const words = evaluationData.words
+  const lowScoringWords = words.filter((word: WordScore) => word.scores.pronunciation < 80)
+  const toneIssues = words.filter((word: WordScore) => word.scores.tone && word.scores.tone < 80)
+
+  let feedback = ''
+
+  if (lowScoringWords.length === 0) {
+    feedback = 'Excellent pronunciation! Your speech is very clear.'
+  } else if (lowScoringWords.length === words.length) {
+    feedback = 'Keep practicing! Focus on pronouncing each syllable clearly.'
+  } else {
+    const problemWords = lowScoringWords.map((word: WordScore) => word.word).join(', ')
+    feedback = `Good effort! Pay attention to the pronunciation of: ${problemWords}`
+  }
+
+  if (toneIssues.length > 0) {
+    feedback += ' Also work on your tone accuracy - tones are very important in Chinese!'
+  }
+
+  return feedback
 }
 
 const playTargetAudio = () => {
@@ -214,6 +434,7 @@ const resetCurrentWord = () => {
   hasAttempted.value = false
   lastAttempt.value = null
   showPinyin.value = false
+  isClickToggleMode.value = false
 }
 
 const getScoreClass = (score: number) => {
@@ -221,6 +442,33 @@ const getScoreClass = (score: number) => {
   if (score >= 80) return 'good'
   if (score >= 70) return 'fair'
   return 'needs-work'
+}
+
+const getWordScoreClass = (pronunciationScore: number) => {
+  if (pronunciationScore >= 90) return 'word-excellent'
+  if (pronunciationScore >= 80) return 'word-good'
+  if (pronunciationScore >= 70) return 'word-fair'
+  return 'word-needs-work'
+}
+
+const getWordIssues = (word: WordScore) => {
+  const issues = []
+
+  if (word.read_type === 1) {
+    issues.push('Extra word')
+  } else if (word.read_type === 2) {
+    issues.push('Missing word')
+  }
+
+  if (word.scores.pronunciation < 70) {
+    issues.push('Pronunciation')
+  }
+
+  if (word.scores.tone && word.scores.tone < 70) {
+    issues.push('Tone')
+  }
+
+  return issues
 }
 
 onMounted(() => {
@@ -410,6 +658,102 @@ onMounted(() => {
   color: #374151;
   margin-bottom: 1rem;
   line-height: 1.5;
+}
+
+.word-analysis {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.analysis-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #1a202c;
+}
+
+.word-scores {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.word-score-item {
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 0.75rem;
+  min-width: 120px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.word-score-item.word-excellent {
+  border-color: #10b981;
+  background: #ecfdf5;
+}
+
+.word-score-item.word-good {
+  border-color: #3b82f6;
+  background: #eff6ff;
+}
+
+.word-score-item.word-fair {
+  border-color: #f59e0b;
+  background: #fffbeb;
+}
+
+.word-score-item.word-needs-work {
+  border-color: #ef4444;
+  background: #fef2f2;
+}
+
+.word-text {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1a202c;
+  margin-bottom: 0.25rem;
+}
+
+.word-pinyin {
+  font-size: 0.875rem;
+  color: #667eea;
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+.score-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.score-label {
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.score-value {
+  font-weight: 600;
+  color: #1a202c;
+}
+
+.word-issues {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.issue-tag {
+  background: #fee2e2;
+  color: #dc2626;
+  padding: 0.125rem 0.5rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
 }
 
 .audio-comparison {
